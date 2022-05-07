@@ -1,0 +1,17 @@
+{
+  "tasks": {
+    "start": "deno run --allow-net=0.0.0.0:8000 server.js",
+    "dev": "deno run --watch --allow-net=0.0.0.0:8000 server.js"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "jsx"
+  },
+  "importMap": "./import-map.json",
+  "lint": {
+    "rules": {
+      "tags": ["recommended"],
+      "exclude": ["prefer-const"]
+    }
+  }
+}
