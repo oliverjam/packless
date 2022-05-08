@@ -1,11 +1,10 @@
-import { serve } from "./deps.js";
 import { send } from "./document.js";
 import { file } from "./file.js";
 import * as Index from "./routes/index.jsx";
 import * as Missing from "./routes/404.jsx";
 import * as Failed from "./routes/500.jsx";
 
-async function handler(request) {
+export async function handler(request) {
   let time = new Date().toLocaleTimeString();
   let { method, url } = request;
   console.log(`${time} ${method} ${url}`);
@@ -28,5 +27,3 @@ async function handler(request) {
     return send(await Failed.get(request), error.status || 500);
   }
 }
-
-serve(handler);

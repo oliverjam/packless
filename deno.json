@@ -1,7 +1,7 @@
 {
   "tasks": {
-    "start": "deno run --allow-net=0.0.0.0:8000 --allow-read=./public server.js",
-    "dev": "deno run --watch --allow-net=0.0.0.0:8000 --allow-read=./public server.js"
+    "start": "deno run --allow-net=0.0.0.0:8000 --allow-read=./public start.js",
+    "dev": "deno run --watch --allow-net=0.0.0.0:8000 --allow-read=./public start.js"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
