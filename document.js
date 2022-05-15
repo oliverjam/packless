@@ -1,34 +1,32 @@
 import { render } from "./deps.js";
 
-let head = /*html*/ `<head>
+let open = /*html*/ `<!doctype html>
+<html>
+  <head>
     <meta charset="utf-8" />
     <title>Packless</title>
     <link rel="stylesheet" href="main.css"/>
-  </head>`;
+  </head>
+  <body>`;
 
-export function send(
-  content_promise,
-  status = 200,
-  headers = { "content-type": "text/html; charset='utf-8'" }
-) {
+let close = `
+  </body>
+</html>`;
+
+export function document(content_promise, headers_init) {
   let body = new ReadableStream({
     async start(controller) {
-      controller.enqueue(/*html*/ `<!doctype html>
-<html>
-  ${head}
-  <body>
-    `);
+      controller.enqueue(open);
       let content = await content_promise;
       controller.enqueue(render(content));
-      controller.enqueue(/*html*/ `
-  </body>
-</html>
-      `);
+      controller.enqueue(close);
       controller.close();
     },
   });
+  let headers = new Headers(headers_init);
+  headers.set("content-type", "text/html");
   return new Response(body.pipeThrough(new TextEncoderStream()), {
-    status,
+    status: 200,
     headers,
   });
 }

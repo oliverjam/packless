@@ -1,4 +1,4 @@
-import { send } from "./document.js";
+import { document } from "./document.js";
 import { file } from "./file.js";
 import * as Index from "./routes/index.jsx";
 import * as Missing from "./routes/404.jsx";
@@ -14,16 +14,16 @@ export async function handler(request) {
     let route = `${method} ${pathname}`;
     switch (route) {
       case "GET /":
-        return send(Index.get(request));
+        return document(Index.get(request));
       case "POST /":
         return await Index.post(request);
       default:
         return await file(pathname).catch(() =>
-          send(Missing.get(request), 404)
+          document(Missing.get(request), 404)
         );
     }
   } catch (error) {
     console.error(error);
-    return send(await Failed.get(request), error.status || 500);
+    return document(await Failed.get(request), error.status || 500);
   }
 }
