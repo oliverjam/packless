@@ -6,9 +6,12 @@ export function render(node) {
     return "";
   }
   if (typeof node !== "object") {
-    return node;
+    return node.toString();
   }
   let { type, props } = node;
+  if (typeof type === "function") {
+    return render(type(props));
+  }
   let { children, ...rest } = props;
   if (children === null || children === false) {
     children = "";
