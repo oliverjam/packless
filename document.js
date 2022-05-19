@@ -13,7 +13,7 @@ let close = `
   </body>
 </html>`;
 
-export function document(content_promise, headers_init) {
+export function document(content_promise, status = 200, headers_init = {}) {
   let body = new ReadableStream({
     async start(controller) {
       controller.enqueue(open);
@@ -26,7 +26,7 @@ export function document(content_promise, headers_init) {
   let headers = new Headers(headers_init);
   headers.set("content-type", "text/html");
   return new Response(body.pipeThrough(new TextEncoderStream()), {
-    status: 200,
+    status,
     headers,
   });
 }
