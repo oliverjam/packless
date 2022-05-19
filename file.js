@@ -1,18 +1,20 @@
 import { join, extname } from "./deps.js";
 
-let mimes = new Map([
-  [".css", "text/css"],
-  [".js", "application/js"],
-  [".ico", "image/x-icon"],
-]);
+let mimes = new Map()
+  .set(".css", "text/css")
+  .set(".js", "application/js")
+  .set(".ico", "image/x-icon");
 
-export async function file(path) {
-  let file = await Deno.readFile(join("public", path));
-  let ext = extname(path);
-  let mime = mimes.get(ext);
-  return new Response(file, {
-    headers: {
-      "content-type": mime || "text/plain",
-    },
-  });
+export function file(dir) {
+  return async (path) => {
+    let file = await Deno.open(join(dir, path), { read: true });
+    let stream = file.readable;
+    let ext = extname(path);
+    let mime = mimes.get(ext);
+    return new Response(stream, {
+      headers: {
+        "content-type": mime || "text/plain",
+      },
+    });
+  };
 }
