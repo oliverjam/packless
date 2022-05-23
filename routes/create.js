@@ -1,4 +1,4 @@
-import { cuid } from "../uid.js";
+import { cuid } from "../lib/uid.js";
 
 export function post() {
   let id = cuid();

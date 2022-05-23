@@ -1,6 +1,6 @@
-import { document } from "./document.js";
-import { file } from "./file.js";
-import { router, get, post, match } from "./router.js";
+import { router, get, post, match } from "./lib/router.js";
+import { document } from "./lib/document.js";
+import { file } from "./lib/file.js";
 import * as home from "./routes/index.jsx";
 import * as create from "./routes/create.js";
 import * as pack from "./routes/pack.jsx";
