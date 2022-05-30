@@ -7,17 +7,25 @@ import * as pack from "./routes/pack.jsx";
 import * as missing from "./routes/404.jsx";
 import * as failed from "./routes/500.jsx";
 
-export function handler(request) {
-  let time = new Date().toLocaleTimeString();
-  console.log(`${time} ${request.method} ${request.url}`);
+export async function handler(request) {
+  let req_time = new Date().toLocaleTimeString();
+  let incoming = `${request.method} ${request.url}`;
+  console.log(`↑ ${req_time} ${incoming}`);
 
   try {
-    return router(
+    let response = await router(
       get("/", document(home.get)),
       post("/create", create.post),
       get(match("/pack/:id"), document(pack.get)),
+      post(match("/pack/:id"), pack.post),
       fallthrough
     )(request);
+
+    let res_time = new Date().toLocaleTimeString();
+    let type = response.headers.get("content-type");
+    console.log(`↓ ${res_time} ${incoming} ${response.status} ${type}`);
+
+    return response;
   } catch (error) {
     console.error(error);
     return document(failed.get, error.status || 500)(request);
