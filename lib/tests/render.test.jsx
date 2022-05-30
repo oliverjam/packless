@@ -44,6 +44,21 @@ Deno.test("render module renders primitive types directly", () => {
   assertEquals(render(999), "999");
 });
 
+Deno.test("render module renders array directly", () => {
+  let content = [<p>test</p>, <b>2</b>];
+  assertEquals(render(content), `<p>test</p><b>2</b>`);
+});
+
+Deno.test("render module renders Fragment correctly", () => {
+  let content = (
+    <>
+      <p>test</p>
+      <b>2</b>
+    </>
+  );
+  assertEquals(render(content), `<p>test</p><b>2</b>`);
+});
+
 Deno.test("render module renders multiple children", () => {
   let content = (
     <section>
