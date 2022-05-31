@@ -1,3 +1,131 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
-  color: red;
+  margin: 0;
+  font-family: system-ui, sans-serif;
+}
+
+main {
+  max-width: 70ch;
+  margin-inline: auto;
+  padding: clamp(1rem, 1rem + 2vw, 2rem);
+}
+
+.Pack {
+  border: 1px solid hsl(180, 10%, 25%);
+}
+
+.Row {
+  padding: 0.75rem;
+}
+
+.Row + .Row {
+  border-top: 1px solid hsl(180, 10%, 80%);
+}
+
+.Row:not(.Sticky):hover,
+.Row:not(.Sticky):focus-within {
+  background-color: hsl(180, 20%, 96%);
+}
+
+.Form {
+  display: flex;
+}
+
+input,
+button {
+  height: 100%;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+
+input {
+  padding: 0.5rem;
+}
+
+input:focus {
+  outline: none;
+}
+
+.input:focus-within {
+  outline: 2px solid skyblue;
+}
+
+span.input {
+  display: flex;
+  align-items: baseline;
+  padding-inline: 0.5rem;
+}
+
+.Form > *:not([type="hidden"]) + * {
+  border-left: 1px solid hsl(180, 10%, 80%);
+}
+
+.Form[data-action="new"] {
+  background-color: hsl(180, 10%, 25%);
+  color: white;
+}
+
+::-webkit-outer-spin-button,
+::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+[type="number"] {
+  -moz-appearance: textfield;
+}
+
+[data-action="update"] :is(.input:hover, .input:focus-within) {
+  background: white;
+}
+
+[data-action="new"] :is(.input:hover, .input:focus-within) {
+  background: hsl(180, 10%, 40%);
+}
+
+[data-action="new"] ::placeholder {
+  opacity: 1;
+  font-style: italic;
+  color: hsl(180, 10%, 90%);
+}
+
+.item {
+  min-width: 0;
+  flex: 1;
+}
+
+.weight {
+  max-width: 12ch;
+}
+
+.unit {
+  max-width: 5ch;
+}
+
+.qty {
+  max-width: 4ch;
+}
+
+.weight::after {
+  content: "g";
+}
+
+.Sticky {
+  display: grid;
+  gap: 0.7rem;
+  position: sticky;
+  top: 0;
+  padding: 0.75rem;
+  background-color: hsl(180, 10%, 25%);
+  color: white;
+}
+
+.Total {
+  font-size: 2rem;
+  font-weight: 900;
+  text-align: right;
 }
