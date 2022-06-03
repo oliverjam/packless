@@ -1,10 +1,11 @@
 import { assertEquals } from "https://deno.land/std@0.139.0/testing/asserts.ts";
-import { router, get, post, match } from "../router.js";
+import { router, get, post, all, match } from "../router.js";
 
 let handle = router(
   get("/", () => "home"),
   post("/submit", () => "post"),
   get(match("/thing/:id"), (req, params) => params.id),
+  all("/all", () => "all"),
   () => "fallthrough"
 );
 
@@ -24,6 +25,12 @@ Deno.test("router handles GET with param", () => {
   let req = new Request("http://example.com/thing/27", { method: "GET" });
   let res = handle(req);
   assertEquals(res, "27");
+});
+
+Deno.test("router can handle any method", () => {
+  let req = new Request("http://example.com/all", { method: "PUT" });
+  let res = handle(req);
+  assertEquals(res, "all");
 });
 
 Deno.test("router handles unmatched routes with fallthrough", () => {
