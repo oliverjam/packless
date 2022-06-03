@@ -1,5 +1,6 @@
-import { router, get, post, match } from "./lib/router.js";
+import { router, get, post, all, match } from "./lib/router.js";
 import * as cookies from "./lib/cookies.js";
+import * as model from "./lib/database/db.js";
 import { document } from "./lib/document.js";
 import { file } from "./lib/file.js";
 import * as home from "./routes/index.jsx";
@@ -8,24 +9,26 @@ import * as pack from "./routes/pack.jsx";
 import * as missing from "./routes/404.jsx";
 import * as failed from "./routes/500.jsx";
 
-let session = cookies.create("__HOST-session", { maxAge: 600 });
+let session_cookie = cookies.create("__HOST-session", { maxAge: 600 });
+let file_handler = file("public");
 
 export async function handler(request) {
   let req_time = new Date().toLocaleTimeString();
   let incoming = `${request.method} ${request.url}`;
   console.log(`↑ ${req_time} ${incoming}`);
 
-  let session_id = session.read(request.headers.get("cookie"));
-  console.log({ session_id });
   try {
-    let response = await router(
+    let handle = router(
+      get(match("/static/:file"), file_handler),
+      all(match("*"), sessions),
       get("/", document(home.get)),
       post("/create", create.post),
       get(match("/pack/:id"), document(pack.get)),
       post(match("/pack/:id"), pack.post),
-      fallthrough
-    )(request);
+      missing.get
+    );
 
+    let response = await handle(request);
     let res_time = new Date().toLocaleTimeString();
     let type = response.headers.get("content-type") || "";
     console.log(`↓ ${res_time} ${incoming} ${response.status} ${type}`);
@@ -37,7 +40,13 @@ export async function handler(request) {
   }
 }
 
-let file_handler = file("public");
-function fallthrough(req) {
-  return file_handler(req).catch(() => document(missing.get, 404)(req));
+function sessions(req) {
+  let session_id = session_cookie.read(req.headers.get("cookie"));
+  if (session_id) {
+    req.session = model.get_user_from_session(session_id);
+  } else {
+    let user_id = model.create_user();
+    let expires_at = "+1 day";
+    req.session = model.create_session(expires_at, user_id);
+  }
 }
