@@ -2,7 +2,7 @@ import { router, get, post, all, match } from "./lib/router.js";
 import * as cookies from "./lib/cookies.js";
 import * as model from "./lib/database/db.js";
 import { document } from "./lib/document.js";
-import { file } from "./lib/file.js";
+import { serve_static } from "./lib/static.js";
 import * as home from "./routes/index.jsx";
 import * as create from "./routes/create.js";
 import * as pack from "./routes/pack.jsx";
@@ -10,7 +10,7 @@ import * as missing from "./routes/404.jsx";
 import * as failed from "./routes/500.jsx";
 
 let session_cookie = cookies.create("__HOST-session", { maxAge: 600 });
-let file_handler = file("public");
+let static_handler = serve_static("public");
 
 export async function handler(request) {
   let req_time = new Date().toLocaleTimeString();
@@ -19,7 +19,7 @@ export async function handler(request) {
 
   try {
     let handle = router(
-      get(match("/static/:file"), file_handler),
+      get(match("/static/:file"), static_handler),
       all(match("*"), sessions),
       get("/", document(home.get)),
       post("/create", create.post),
