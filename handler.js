@@ -9,7 +9,8 @@ import * as pack from "./routes/pack.jsx";
 import * as missing from "./routes/404.jsx";
 import * as failed from "./routes/500.jsx";
 
-let session_cookie = cookies.create("__HOST-session", { maxAge: 600 });
+let one_day = 1000 * 60 * 60 * 24;
+let session_cookie = cookies.create("__HOST-session", { maxAge: one_day });
 let static_handler = serve_static("public");
 
 export async function handler(request) {
@@ -29,6 +30,10 @@ export async function handler(request) {
     );
 
     let response = await handle(request);
+    if (request.session_cookie) {
+      response.headers.set("set-cookie", request.session_cookie);
+    }
+
     let res_time = new Date().toLocaleTimeString();
     let type = response.headers.get("content-type") || "";
     console.log(`↓ ${res_time} ${incoming} ${response.status} ${type}`);
@@ -43,10 +48,12 @@ export async function handler(request) {
 function sessions(req) {
   let session_id = session_cookie.read(req.headers.get("cookie"));
   if (session_id) {
-    req.session = model.get_user_from_session(session_id);
+    req.user = model.get_user_from_session(session_id);
   } else {
-    let user_id = model.create_user();
+    req.user = model.create_user();
     let expires_at = "+1 day";
-    req.session = model.create_session(expires_at, user_id);
+    let session = model.create_session(expires_at, req.user.id);
+    let expires = session.expires_at;
+    req.session_cookie = session_cookie.write(session.id, { expires });
   }
 }
