@@ -1,4 +1,4 @@
-export function get() {
+export function get(req) {
   return (
     <main>
       <h1>Packless</h1>

@@ -3,7 +3,7 @@ import * as cookies from "./lib/cookies.js";
 import * as model from "./lib/database/db.js";
 import { document } from "./lib/document.js";
 import { serve_static } from "./lib/static.js";
-import * as home from "./routes/index.jsx";
+import * as home from "./routes/home.jsx";
 import * as create from "./routes/create.js";
 import * as pack from "./routes/pack.jsx";
 import * as missing from "./routes/404.jsx";
