@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS items (
 CREATE TABLE IF NOT EXISTS packs_items (
   pack_id TEXT REFERENCES packs(id),
   item_id TEXT REFERENCES items(id),
-  quantity INTEGER DEFAULT 1
+  quantity INTEGER DEFAULT 1,
+  PRIMARY KEY (pack_id, item_id)
 );
 
 COMMIT;
