@@ -3,5 +3,4 @@
 deno test \
   --allow-read=db.sqlite,db.sqlite-journal,lib/database/schema.sql \
   --allow-write=db.sqlite \
-  --allow-env=DB_PATH \
   --watch

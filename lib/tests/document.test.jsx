@@ -5,11 +5,14 @@ import {
 import { document } from "../document.js";
 
 Deno.test("document module renders sync content", async () => {
-  let content = <h1>Hello</h1>;
-  let response = document(content, 200, { "X-Test": "test header" });
+  let content = () => <h1>Hello</h1>;
+  let response = document(content, 200, { "X-Test": "test header" })();
   assertEquals(response instanceof Response, true);
   assertEquals(response.status, 200);
-  assertEquals(response.headers.get("content-type"), "text/html");
+  assertEquals(
+    response.headers.get("content-type"),
+    "text/html; charset=UTF-8"
+  );
   assertEquals(response.headers.get("X-Test"), "test header");
   let body = await response.text();
   assertMatch(body, /<!doctype html>/, "Should respond with an HTML doc");
@@ -17,11 +20,14 @@ Deno.test("document module renders sync content", async () => {
 });
 
 Deno.test("document module renders async content", async () => {
-  let content = Promise.resolve(<h1>Hello</h1>);
-  let response = document(content);
+  let content = () => Promise.resolve(<h1>Hello</h1>);
+  let response = document(content)();
   assertEquals(response instanceof Response, true);
   assertEquals(response.status, 200);
-  assertEquals(response.headers.get("content-type"), "text/html");
+  assertEquals(
+    response.headers.get("content-type"),
+    "text/html; charset=UTF-8"
+  );
   let reader = response.body.getReader();
   let { value: first_chunk, done } = await reader.read();
   assertEquals(done, false, "Should respond with start of HTML immediately");

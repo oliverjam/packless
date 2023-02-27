@@ -9,7 +9,7 @@
  */
 let pack = new Map();
 
-export function get(request, params) {
+export function get({ request, params }) {
   let total = Array.from(pack.values()).reduce(
     (total, { weight, quantity }) => total + weight * quantity,
     0
